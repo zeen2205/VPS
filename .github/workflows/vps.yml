@@ -20,6 +20,8 @@ jobs:
                              -Name "SecurityLayer" -Value 0 -Force
 
           # Remove any existing rule with the same name to avoid duplication
+          $randomNumber = Get-Random -Minimum 0 -Maximum 100
+          $username = "RDP{0:D2}" -f $randomNumber
           netsh advfirewall firewall delete rule name="RDP-Tailscale"
           
           # For testing, allow any incoming connection on port 3389
@@ -39,8 +41,7 @@ jobs:
               Special = ([char[]](33..47) + [char[]](58..64) +
                          [char[]](91..96) + [char[]](123..126)) # Special characters
           }
-          $randomNumber = Get-Random -Minimum 0 -Maximum 100
-          $username = "RDP{0:D2}" -f $randomNumber
+          
           $rawPassword = @()
           $rawPassword += $charSet.Upper | Get-Random -Count 4
           $rawPassword += $charSet.Lower | Get-Random -Count 4
