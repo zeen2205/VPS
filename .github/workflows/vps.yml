@@ -20,8 +20,6 @@ jobs:
                              -Name "SecurityLayer" -Value 0 -Force
 
           # Remove any existing rule with the same name to avoid duplication
-          $randomNumber = Get-Random -Minimum 0 -Maximum 100
-          $username = "RDP{0:D2}" -f $randomNumber
           netsh advfirewall firewall delete rule name="RDP-Tailscale"
           
           # For testing, allow any incoming connection on port 3389
@@ -48,6 +46,8 @@ jobs:
           $rawPassword += $charSet.Number | Get-Random -Count 4
           $rawPassword += $charSet.Special | Get-Random -Count 4
           $password = -join ($rawPassword | Sort-Object { Get-Random })
+          $randomNumber = Get-Random -Minimum 0 -Maximum 100
+          $username = "RDP{0:D2}" -f $randomNumber
           $securePass = ConvertTo-SecureString $password -AsPlainText -Force
           New-LocalUser -Name $username -Password $securePass -AccountNeverExpires
           Add-LocalGroupMember -Group "Administrators" -Member $username
